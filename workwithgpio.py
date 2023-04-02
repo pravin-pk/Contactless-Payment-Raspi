@@ -3,23 +3,28 @@ import time
 import xmlrpc.client
 from camera import Camera
 
-trigPin = 23
-outPin = 11
+capturePin = 23
+videoPin = 24
 
 gpio.setmode(gpio.BCM)
-gpio.setup(trigPin, gpio.IN, pull_up_down=gpio.PUD_DOWN)
-#gpio.setup(trigPin, gpio.IN)
+gpio.setup(capturePin, gpio.IN, pull_up_down=gpio.PUD_DOWN)
+gpio.setup(videoPin, gpio.IN, pull_up_down=gpio.PUD_DOWN)
 #gpio.setup(outPin, gpio.OUT)
 
 conn = xmlrpc.client.ServerProxy('http://192.168.1.5:8111')
 cam = Camera()
 try:
 	while 1:
-		if gpio.input(trigPin)==gpio.HIGH:
-			image = cam.capture()
-			#print(type(image))
+		if gpio.input(capturePin)==gpio.HIGH:
+			image = cam.captureImage()
+
 			status = conn.saveImage(image)
-			print("Triggerd", status)
+			print("Image transferred to server - ", status)
+			continue
+		elif gpio.input(videoPin)==gpio.HIGH:
+			video = cam.captureVideo()
+			#status = conn.saveVideo(video)
+			print("Video transferred to server - ")
 			continue
 		else:
 			print("Not Triggered")
