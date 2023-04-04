@@ -1,4 +1,4 @@
-from picamera2 import Picamera2
+from picamera2 import Picamera2, Preview
 from picamera2.encoders import H264Encoder
 from picamera2.outputs import FileOutput
 import time
@@ -9,9 +9,9 @@ import socket
 class Camera:
 	def __init__(self):
 		self.picam2 = Picamera2()
+		self.picam2.start_preview()
 
 	def captureImage(self):
-
 
 		self.picam2.start()
 		#time.sleep(1)
@@ -24,14 +24,15 @@ class Camera:
 		return img_str
 
 	def captureVideo(self):
-		video_config = self.picam2.create_video_configuration()
+		video_config = self.picam2.create_video_configuration({"size": (640,480)})
 		self.picam2.configure(video_config)
 		encoder = H264Encoder(1000000)
 		
 		with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-			sock.connect(("192.168.1.5", 8222))
+			sock.connect(("192.168.137.128", 8222))
 			stream = sock.makefile("wb")
 			self.picam2.start_recording(encoder, FileOutput(stream))
 			time.sleep(3)
 			self.picam2.stop_recording()
-		return "done"
+			#output = FileOutput(stream)
+		return stream
