@@ -5,6 +5,7 @@ import time
 import io
 import base64
 import socket
+import cv2
 
 class Camera:
 	def __init__(self):
@@ -21,6 +22,7 @@ class Camera:
 		self.picam2.stop()
 		#print(self.picam2.capture_metadata())
 		img_str = base64.b64encode(data.getvalue()).decode()
+		#self.picam2.stop()
 		return img_str
 
 	def captureVideo(self):
@@ -36,3 +38,14 @@ class Camera:
 			self.picam2.stop_recording()
 			#output = FileOutput(stream)
 		return stream
+
+	def processLive(self):
+		self.picam2.start()
+		while True:
+			frame = self.picam2.capture_array("main")
+			frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+			cv2.imshow("Live Stream", frame)
+			if cv2.waitKey(1) == ord('q'):
+				break
+		cv2.destroyAllWindows()
+		self.picam2.stop()
