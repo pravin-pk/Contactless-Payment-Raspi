@@ -57,7 +57,7 @@ class ROIExtractor:
 
         # make darker areas more darker
         img_cropped = cv2.addWeighted(img_cropped, 4, cv2.GaussianBlur(img_cropped, (0,0), 30), -4, 128)
-        img_cropped = cv2.resize(img_cropped, (350,350))
+        img_cropped = cv2.resize(img_cropped, (150,150))
         # cv2.imwrite('../ROI_cropped.jpg',img_cropped)
 
         return img_cropped
