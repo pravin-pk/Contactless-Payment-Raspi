@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QStackedWidget, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QPixmap, QIcon, QImage
 from PyQt5.QtCore import pyqtSlot, QTimer, QThread, Qt
+from picamera2.previews.qt import QGlPicamera2
 
 from camera import _Camera
 scan = -1
@@ -188,6 +189,7 @@ class ScanPage1(QWidget):
             # print('main',threading.currentThread())
             pixmap2 = QPixmap.fromImage(live)
             self.live_video_label.setPixmap(pixmap2)
+
             pixmap1 = QPixmap.fromImage(roi)
             # pixmap1.scaled(300, 300, Qt.KeepAspectRatio)
             self.ROI_video_label.setPixmap(pixmap1)
