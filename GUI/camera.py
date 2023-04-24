@@ -18,7 +18,8 @@ class _Camera(QObject):
         super().__init__()
         #self.cap = cv2.VideoCapture(0)
         self.cap = Picamera2()
-        #config = self.cap.create_preview_configuration({"size": (350,350)})
+        config = self.cap.create_still_configuration({"size": (300,300), "format": 'RGB888'})
+        self.cap.configure(config)
 
     @pyqtSlot()
     def start_camera(self):
@@ -27,14 +28,15 @@ class _Camera(QObject):
             while True:
                 #ret, frame = self.cap.read()
                 frame = self.cap.capture_array("main")
-
+                
+                img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 self.frame = ROIExtractor().extract(gray)
-                print(self.frame.shape)
+                
 
                 roi = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)
                 roi = roi.rgbSwapped()
-                live = QImage(gray[0], frame.shape[1], frame.shape[0], QImage.Format_BGR888)
+                live = QImage(img, gray.shape[1], gray.shape[0], QImage.Format_RGB888)
                 #live = live.rgbSwapped()
                 #live = QGlPicamera2(self.cap, width=350, height=350, keep_ar=False)
 
