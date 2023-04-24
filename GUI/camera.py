@@ -8,7 +8,7 @@ from PyQt5.QtGui import QImage, QPixmap
 # conn = xmlrpc.client.ServerProxy('http://192.168.1.5:8111')
 import threading
 from picamera2 import Picamera2, Preview
-from picamera2.previews.qt import QGlPicamera2
+from libcamera import controls
 
 
 class _Camera(QObject):
@@ -18,8 +18,9 @@ class _Camera(QObject):
         super().__init__()
         #self.cap = cv2.VideoCapture(0)
         self.cap = Picamera2()
-        config = self.cap.create_still_configuration({"size": (300,300), "format": 'RGB888'})
+        config = self.cap.create_still_configuration({"size": (500,500), "format": 'RGB888'})
         self.cap.configure(config)
+        self.cap.set_controls({"AfMode": controls.AfModeEnum.Continuous})
 
     @pyqtSlot()
     def start_camera(self):
@@ -35,8 +36,8 @@ class _Camera(QObject):
                 
 
                 roi = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)
-                roi = roi.rgbSwapped()
-                live = QImage(img, gray.shape[1], gray.shape[0], QImage.Format_RGB888)
+                #roi = roi.rgbSwapped()
+                live = QImage(img, img.shape[1], img.shape[0], QImage.Format_RGB888)
                 #live = live.rgbSwapped()
                 #live = QGlPicamera2(self.cap, width=350, height=350, keep_ar=False)
 
