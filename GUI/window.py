@@ -1,18 +1,18 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QStackedWidget, QSpacerItem, QSizePolicy
+import qrcode
+from datetime import datetime
+from uuid import uuid4
+from io import BytesIO
+from PyQt5.QtWidgets import (
+    QApplication, QMainWindow, QWidget, QVBoxLayout, 
+    QHBoxLayout, QLabel, QLineEdit, QPushButton, 
+    QStackedWidget, QSpacerItem, QSizePolicy, QMenuBar, QAction)
 from PyQt5.QtGui import QPixmap, QIcon, QImage
 from PyQt5.QtCore import pyqtSlot, QTimer, QThread, Qt
-from picamera2.previews.qt import QGlPicamera2
 
 from camera import _Camera
+import serverConnect
 scan = -1
-
-
-# import cv2
-# from roiExtraction import ROIExtractor
-# import time, threading
-# from threading import Thread, Lock
-
 
 class LoginWindow(QWidget):
     def __init__(self, stacked_widget):
@@ -90,10 +90,17 @@ class HomePage(QWidget):
 
         self.stacked_widget = stacked_widget
 
+        # menu_bar = QMenuBar(self)
+        # home_action = QAction('Home', self)
+        # home_action.triggered.connect(self.go_home)
+        # menu_bar.addAction(home_action)
+
         welcome_label = QLabel("Welcome to Contactless Payment!")
+        welcome_label.setAlignment(Qt.AlignCenter)
         welcome_label.setObjectName("headingLabel")
 
         process_label = QLabel("  Scan  >  Register  >  Pay")
+        process_label.setAlignment(Qt.AlignCenter)
 
         register_button = QPushButton(" New User")
         # register_button.setIcon(QIcon('images/new_user.png'))
@@ -108,6 +115,8 @@ class HomePage(QWidget):
         payment_button.clicked.connect(lambda: self.change_page(1))
 
         v_layout = QVBoxLayout()
+        # v_layout.addWidget(menu_bar)
+        # v_layout.addSpacing(20)
         v_layout.addWidget(welcome_label)
         v_layout.addSpacing(10)
         v_layout.addWidget(process_label)
@@ -121,19 +130,26 @@ class HomePage(QWidget):
 
         v_layout.addLayout(h_layout)
         self.setLayout(v_layout)
-        v_layout.setContentsMargins(100, 100, 100, 100)
+        v_layout.setContentsMargins(100, 50, 100, 100)
 
     def change_page(self, data):
         global scan 
         scan = data
         self.stacked_widget.setCurrentIndex(2)
 
+    def go_home(self):
+        self.stacked_widget.setCurrentIndex(1)
+
 
 class ScanPage1(QWidget):
     def __init__(self, stacked_widget):
         super().__init__()
         self.stacked_widget = stacked_widget
-        
+
+        menu_bar = QMenuBar(self)
+        home_action = QAction('Home', self)
+        home_action.triggered.connect(self.go_home)
+        menu_bar.addAction(home_action)
         layout = QVBoxLayout()
 
         welcome_label = QLabel("Please place your palm on the camera")
@@ -151,6 +167,7 @@ class ScanPage1(QWidget):
         button2 = QPushButton('Take Picture',self)
         button2.clicked.connect(self.get_roi)
 
+        layout.addWidget(menu_bar)
         layout.addWidget(welcome_label)
         layout.addSpacing(20)
         h1_layout = QHBoxLayout()
@@ -166,7 +183,7 @@ class ScanPage1(QWidget):
         layout.addLayout(h1_layout)
         layout.addLayout(h_layout)
         self.setLayout(layout)
-        layout.setContentsMargins(100,100,100,100)
+        layout.setContentsMargins(100,0,100,100)
     
     @pyqtSlot()
     def get_frame(self):
@@ -189,7 +206,6 @@ class ScanPage1(QWidget):
             # print('main',threading.currentThread())
             pixmap2 = QPixmap.fromImage(live)
             self.live_video_label.setPixmap(pixmap2)
-
             pixmap1 = QPixmap.fromImage(roi)
             # pixmap1.scaled(300, 300, Qt.KeepAspectRatio)
             self.ROI_video_label.setPixmap(pixmap1)
@@ -210,6 +226,9 @@ class ScanPage1(QWidget):
                 self.stacked_widget.setCurrentIndex(4)
         except Exception as ex:
             print(ex)
+
+    def go_home(self):
+        self.stacked_widget.setCurrentIndex(1)
 
 # class _ScanPage(QWidget):
 #     def __init__(self, stacked_widget):
@@ -266,6 +285,11 @@ class MatchPage(QWidget):
         super().__init__()
         self.stacked_widget = stacked_widget
 
+        menu_bar = QMenuBar(self)
+        home_action = QAction('Home', self)
+        home_action.triggered.connect(self.go_home)
+        menu_bar.addAction(home_action)
+
         layout = QVBoxLayout()
         welcome_label = QLabel("Matching Please Wait...")
         welcome_label.setObjectName("headingLabel")
@@ -275,11 +299,15 @@ class MatchPage(QWidget):
         # self.ROI_label.resize(250, 250)
         self.ROI_label.setPixmap(pixmap)
 
+        layout.addWidget(menu_bar)
         layout.addWidget(welcome_label)
         layout.addSpacing(20)
         layout.addWidget(self.ROI_label)
         self.setLayout(layout)
-        layout.setContentsMargins(100, 100, 100, 100)
+        layout.setContentsMargins(100, 0, 100, 100)
+    
+    def go_home(self):
+        self.stacked_widget.setCurrentIndex(1)
 
     # def show_roi(self):
     #     pixmap = QPixmap('ROI.jpg')
@@ -293,6 +321,42 @@ class RegisterPage(QWidget):
     def __init__(self, stacked_widget):
         super().__init__()
         self.stacked_widget = stacked_widget
+
+        menu_bar = QMenuBar(self)
+        home_action = QAction('Home', self)
+        home_action.triggered.connect(self.go_home)
+        menu_bar.addAction(home_action)
+
+        layout = QVBoxLayout()
+        welcome_label = QLabel("Please Scan the QR and register with our mobile application")
+        welcome_label.setObjectName("headingLabel")
+
+        self.QR_label = QLabel(self)
+
+        layout.addWidget(menu_bar)
+        layout.addWidget(welcome_label)
+        layout.addSpacing(20)
+        layout.addWidget(self.QR_label)
+        self.setLayout(layout)
+        layout.setContentsMargins(100, 0, 100, 100)
+
+    def showEvent(self, a0) -> None:
+        serverStuff = serverConnect.connect()
+
+        palmId = serverStuff['uniqueId']
+        buf = BytesIO()
+        img = qrcode.make(f"""
+            palmId:{palmId}
+        """)
+        img.save(buf, "PNG")
+        qr_pixmap = QPixmap()
+        qr_pixmap.loadFromData(buf.getvalue(), "PNG")
+
+        self.QR_label.setPixmap(qr_pixmap)
+        self.QR_label.setAlignment(Qt.AlignCenter)
+
+    def go_home(self):
+        self.stacked_widget.setCurrentIndex(1)
 
 class MainWindow(QMainWindow):
     def __init__(self, W_width, w_height):
@@ -308,15 +372,13 @@ class MainWindow(QMainWindow):
         scan_page = ScanPage1(stacked_widget)
         # scan_page = _ScanPage(stacked_widget)
         register_page = RegisterPage(stacked_widget)
-        match_page = MatchPage(stacked_widget)
-        
+        match_page = MatchPage(stacked_widget) 
 
         stacked_widget.addWidget(login_page) 
         stacked_widget.addWidget(home_page)
         stacked_widget.addWidget(scan_page)
         stacked_widget.addWidget(register_page)
         stacked_widget.addWidget(match_page)
-
 
         self.setCentralWidget(stacked_widget)
 

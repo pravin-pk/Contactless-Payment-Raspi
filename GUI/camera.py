@@ -7,9 +7,13 @@ from PyQt5.QtGui import QImage, QPixmap
 # import xmlrpc.client
 # conn = xmlrpc.client.ServerProxy('http://192.168.1.5:8111')
 import threading
+import RPi.GPIO as GPIO
 from picamera2 import Picamera2, Preview
 from libcamera import controls
 
+capturePin = 23
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(capturePin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 class _Camera(QObject):
     frame_processed = pyqtSignal(QImage, QImage)
@@ -28,24 +32,26 @@ class _Camera(QObject):
             self.cap.start()
             while True:
                 #ret, frame = self.cap.read()
-                frame = self.cap.capture_array("main")
-                
-                img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                self.frame = ROIExtractor().extract(gray)
-                
+                if GPIO.input(capturePin)!=GPIO.HIGH:
+                    frame = self.cap.capture_array("main")
+
+                    img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    self.frame = ROIExtractor().extract(gray)
+                else:
+                    self.frame = np.zeros((150, 150))
+                    img = np.zeros((150, 150))
+
 
                 roi = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)
                 #roi = roi.rgbSwapped()
                 live = QImage(img, img.shape[1], img.shape[0], QImage.Format_RGB888)
-                #live = live.rgbSwapped()
+                live = live.rgbSwapped()
                 #live = QGlPicamera2(self.cap, width=350, height=350, keep_ar=False)
 
-                self.frame_processed.emit(roi, live)
+
+                self.frame_processed.emit(roi, live) 
                 # print('worker',threading.currentThread())
-                # time.sleep(0.03)
-                #if cv2.waitKey(1) & 0xFF == ord('q'):
-                 #   break
 
         except Exception as ex:
             print(ex)
@@ -71,5 +77,5 @@ class _Camera(QObject):
 
 
 if __name__ == '__main__':
-    cam = Camera()
+    cam = _Camera()
     cam.get_frame()
