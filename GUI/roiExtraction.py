@@ -28,7 +28,7 @@ class ROIExtractor:
         # APPLYING WATERSHED ALGORITHM
         dist_transform = cv2.distanceTransform(grad, cv2.DIST_L2, 5)
 
-        ret, sure = cv2.threshold(dist_transform, 0.25*dist_transform.max(), 255, 0)
+        ret, sure = cv2.threshold(dist_transform, 0.50*dist_transform.max(), 255, 0)
 
         grad2 = cv2.morphologyEx(sure, cv2.MORPH_OPEN, kernal, iterations=3)
 

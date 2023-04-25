@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "contactless-payment-d049d",
+  "private_key_id": "728b05e672f66cd3fd1a02a605c634df97e37d47",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC5J2UdsH3/XEWg\n1kl3N3LHWcZojlmrlKa2WrZFgznHD/l9d/E59P5auvQicWKxlBXU4KTHqXuRwnRl\nG6gfwLsIu09aiihtcI3N6MIopXxFroiJbiJHQVnHq897VZSX/WxaMPaz/YHYJ6NC\nis9p7u3kjd/tmGgTMrCjaumcoH4Jbc9dNofq3cR61ayBguuUZIT/XOU6b4fSwdqz\nwi651PQX+yk0lgNlvg7+e9U+qmdbq4GnYQp6d0b3h7cnuWgndkCtWQUR36ZBNHoe\nCtAgxvfbyEoka/UUR0BKluUyEDUjBMR0Y/tJLtimIgSCNBoGDWVQOF3OMDx0Uvnx\nabdmBnVPAgMBAAECggEABCNvclFFElrvdXpaAa+mwZzt6d1bVLyfA07AvzSr1cQI\nzrdKbYIJLgxQCPW21S2a//tAw55eqYc1TyM7R/ETXSJup3aUvml4dJnsvmLV2xWH\nw2ac89xv6MjG0O9nQa8Y57qAxnd2mlcRzPAfAF5Q8+hV5nt0bBAYfEvsn83DM2u2\nlauK1j3GwKnJPmEFp0dupX1hHE2Jk0EC3GiaHAbHunWqVfN4WHHH+OCQxudrw47N\n0Ck/uWVGvwDyIHdDSJ+lYWPuzdymaB0kRIbvXgkIvl6KywbFexu5f4vAWfec9QXy\nKiSfblO/ZXmU4oo5GjcKgT6uEEuQnFpEtu4Gx/L2ZQKBgQD6cCPA7247IwQXHyNF\nqCQiyHgiRFN/smMvtaJUkzNC9XQ1IsG4BiZoZIAZgANvzYxPkUzKjcMF5W5bsh+x\n4NRhq1U0olRKClUU5nz1TEX2pG+2cSriywF8jKZNk5zzUwEYf/A/pCkbKLmcu7d9\nqQcYCmuRMljPPRX4Wmlc3a5nTQKBgQC9RBVlw4y5H1WEdimy3GufIh8Okrr4wSqn\n1PHi1me2kaMnwBLdyED7glNK0s2IB8ZZyvpgJK/NU/sKw1TXLjTvKsvxcZdfOgKL\nK2bXt/nzbT1m4/GcXuhGxIIScJS1Xa1sCLQe3GulkQsik6QGOQ5yvRox44fPGRVh\nnfqbm3eZCwKBgElvMnyzeH4ssVlaTwxw1k/AusFJibZrB3yI5RWpqCFdOfsOuwEM\nBJ0dwxY3HErfWeJG9955HROQiACpRXPyOjR9edmaM98WEoazYzbGa8l7xCoaGvov\njrsHvwgGXcJXt32Inlj6+Pa2xV55CL/3HVZmT85elf4GqneNg1GwyyANAoGAHY7T\ndKgcgxDEr0Iw8vD/kcOnbAQ4VP795WYZPJ7VZarK+ztA9wf+Ngk9btMLLDJipMVR\nYtB38C4sZ5rn1g8uTye04AkoZcPOf+OQVSIzU/P8geQZaJ1d0yd/VNfmMYjmu5eE\nYcl0uk+zmHvMQviILB0iSSZKoGo/b5ZXfBPEks8CgYEA9cpfyYzmK6aj46XAphM8\nn9zCdBg+FWmfPzsyvbGfNUHagQmdw6AX/Weqjs3lfemT+P6s+1jTBar561Z2AeJi\nAxvKscwK7qlGf52pzeVN9DUwCeBro14omHHf6SHtthpXBOGKn2M6pDZ5qp2KrQB/\n5z92fhwKv2IfqBrkmMag5Ow=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-2pqgu@contactless-payment-d049d.iam.gserviceaccount.com",
+  "client_id": "107043097157351000684",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-2pqgu%40contactless-payment-d049d.iam.gserviceaccount.com"
+}
