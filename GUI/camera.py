@@ -1,3 +1,4 @@
+
 import cv2
 import numpy as np
 import time
@@ -36,6 +37,7 @@ class _Camera(QObject):
                     frame = self.cap.capture_array("main")
 
                     img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    img = cv2.rectangle(img, (100,100),(400,400),(0,255,0),2)
                     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                     self.frame = ROIExtractor().extract(gray)
                 else:
@@ -46,7 +48,7 @@ class _Camera(QObject):
                 roi = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)
                 #roi = roi.rgbSwapped()
                 live = QImage(img, img.shape[1], img.shape[0], QImage.Format_RGB888)
-                live = live.rgbSwapped()
+                #live = live.rgbSwapped()
                 #live = QGlPicamera2(self.cap, width=350, height=350, keep_ar=False)
 
 
