@@ -39,7 +39,7 @@ class _Camera(QObject):
                     img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                     img = cv2.rectangle(img, (100,100),(400,400),(0,255,0),2)
                     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                    self.frame = ROIExtractor().extract(gray[100:400][100:400])
+                    self.frame = ROIExtractor().extract(gray)
                 else:
                     self.frame = np.zeros((150, 150))
                     img = np.zeros((150, 150))

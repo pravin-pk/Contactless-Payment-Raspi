@@ -1,4 +1,5 @@
 import sys
+import time
 import qrcode
 from datetime import datetime
 from uuid import uuid4
@@ -291,21 +292,37 @@ class MatchPage(QWidget):
         menu_bar.addAction(home_action)
 
         layout = QVBoxLayout()
-        welcome_label = QLabel("Matching Please Wait...")
-        welcome_label.setObjectName("headingLabel")
+        self.welcome_label = QLabel("Matching Please Wait...")
+        self.welcome_label.setObjectName("headingLabel")
 
         pixmap = QPixmap("ROI.jpg")
         self.ROI_label = QLabel(self)
         # self.ROI_label.resize(250, 250)
         self.ROI_label.setPixmap(pixmap)
+        self.success_label = QLabel(self)
 
         layout.addWidget(menu_bar)
-        layout.addWidget(welcome_label)
+        layout.addWidget(self.welcome_label)
         layout.addSpacing(20)
         layout.addWidget(self.ROI_label)
+        layout.addSpacing(10)
+        layout.addWidget(self.success_label)
         self.setLayout(layout)
         layout.setContentsMargins(100, 0, 100, 100)
-    
+
+    def showEvent(self, a):
+        checkPalm()
+        time.sleep(2)
+        self.success_label.setText("Transaction Successful! Please check your mobile app for History and Balance")
+
+    def do_next(self):
+        checkPalm()
+        print("Payment done")
+#        self.welcome_label = QLabel("Match Successfull, Amount is deducted")
+#        self.ROI_label = QLabel("Check your mobile app for Balance and transaction history")
+        self.stacked_widget.setCurrentIndex(5)
+
+
     def go_home(self):
         self.stacked_widget.setCurrentIndex(1)
 
@@ -358,6 +375,30 @@ class RegisterPage(QWidget):
     def go_home(self):
         self.stacked_widget.setCurrentIndex(1)
 
+class SuccessPage(QWidget):
+    def __init__(self, stacked_widget):
+        super().__init__()
+        self.stacked_widget = stacked_widget
+
+        menu_bar = QMenuBar(self)
+        home_action = QAction('Home', self)
+        home_action.triggered.connect(self.go_home)
+        menu_bar.addAction(home_action)
+
+        layout = QVBoxLayout()
+        welcome_label = QLabel("Transaction Successful!. Please check your mobile app for history and balance")
+        welcome_label.setObjectName("headingLabel")
+
+        layout.addWidget(menu_bar)
+        layout.addWidget(welcome_label)
+        layout.addSpacing(20)
+        self.setLayout(layout)
+        layout.setContentsMargins(100, 0, 100, 100)
+
+    def go_home(self):
+        self.stacked_widget.setCurrentIndex(1)
+
+
 class MainWindow(QMainWindow):
     def __init__(self, W_width, w_height):
         super().__init__()
@@ -372,13 +413,15 @@ class MainWindow(QMainWindow):
         scan_page = ScanPage1(stacked_widget)
         # scan_page = _ScanPage(stacked_widget)
         register_page = RegisterPage(stacked_widget)
-        match_page = MatchPage(stacked_widget) 
+        match_page = MatchPage(stacked_widget)
+        success_page = SuccessPage(stacked_widget) 
 
         stacked_widget.addWidget(login_page) 
         stacked_widget.addWidget(home_page)
         stacked_widget.addWidget(scan_page)
         stacked_widget.addWidget(register_page)
         stacked_widget.addWidget(match_page)
+        stacked_widget.addWidget(success_page)
 
         self.setCentralWidget(stacked_widget)
 

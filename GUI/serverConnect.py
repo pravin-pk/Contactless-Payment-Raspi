@@ -35,7 +35,12 @@ def checkPalm():
 	r = requests.post(url, data=data, headers=headers)
 
 	uniqueId = json.loads(r.text)['uniqueId']
-
-	amount = db.collection('users').document(uniqueId).get().to_dict()['wallet']
+	#print(uniqueId)
+	amount = db.collection(u'users').document(uniqueId).get().to_dict()['wallet']
+	#print(amount)
 	db.collection('users').document(uniqueId).update({'wallet': amount-100})
 	db.collection('users').document(uniqueId).collection("transactions").add({'amount': 100, 'timestamp': firestore.SERVER_TIMESTAMP, 'type': 'debit'})
+
+
+if __name__=="__main__":
+    checkPalm()
