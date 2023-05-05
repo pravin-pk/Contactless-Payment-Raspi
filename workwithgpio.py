@@ -8,19 +8,19 @@ capturePin = 23
 videoPin = 24
 
 gpio.setmode(gpio.BCM)
-gpio.setup(capturePin, gpio.IN, pull_up_down=gpio.PUD_DOWN)
-gpio.setup(videoPin, gpio.IN, pull_up_down=gpio.PUD_UP)
+gpio.setup(capturePin, gpio.IN, pull_up_down=gpio.PUD_UP)
+gpio.setup(videoPin, gpio.IN, pull_up_down=gpio.PUD_DOWN)
 #gpio.setup(outPin, gpio.OUT)
 
 conn = xmlrpc.client.ServerProxy('http://192.168.1.6:8111')
 cam = Camera()
 try:
 	while 1:
-		if gpio.input(capturePin)==gpio.HIGH:
+		if gpio.input(capturePin)!=gpio.HIGH:
 			image = cam.captureImage()
 
-			status = conn.showImage(image)
-			print("Image transferred to server - ", status)
+			#status = conn.showImage(image)
+			print("Image transferred to server - ")
 			continue
 		elif gpio.input(videoPin)==gpio.HIGH:
 			frame = cam.captureArray()
